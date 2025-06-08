@@ -4,11 +4,17 @@
 #include <direct.h> // Required for _getcwd
 #include <cstring>  // For C-style strings
 
+#include "Orb.h"
+
+
 
 
 
 const int SCREEN_W = 800;
 const int SCREEN_H = 600;
+
+Orb orbs[10];  // Up to 10 on screen
+
 
 
 
@@ -32,6 +38,9 @@ int main() {
 		std::cerr << "Failed to initialize Allegro image addon.\n";
 		return -1;
 	}
+
+
+
 
 
 	if (!al_install_keyboard()) {
@@ -77,6 +86,9 @@ int main() {
         std::cerr << "Failed to load fire.png\n";
         return -1;
     }
+
+
+    al_convert_mask_to_alpha(fire, al_map_rgb(255, 255, 255));
 
 
 

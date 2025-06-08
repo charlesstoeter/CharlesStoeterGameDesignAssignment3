@@ -1,0 +1,69 @@
+#include "Orb.h"
+#include <allegro5/allegro_primitives.h> // if you want to draw fallback circles
+#include <cmath> // for cos/sin
+
+#define PI 3.14159265 // Pi constant
+
+Orb::Orb() {
+    x = y = 0;
+    speed = 10;
+    radianAngle = 0;
+    live = false;
+    image = nullptr;
+}
+
+void Orb::fire(int startX, int startY, float angle, ALLEGRO_BITMAP* img) {
+    if (!live) {
+
+        x = startX;
+        y = startY;
+
+
+
+        radianAngle = ((angle + 64.0f) / 0.711f) * ((2 * PI) / 360.0f); // arc
+
+
+
+
+        speed = 10;
+        image = img;
+        live = true;
+    }
+}
+
+
+
+
+void Orb::update() {
+    if (live) {
+        x += speed * cos(radianAngle);
+        y -= speed * sin(radianAngle);
+
+        // Deactivate if off-screen
+        if (x < 0 || x > 800 || y < 0 || y > 600)
+            live = false;
+    }
+}
+
+
+
+
+void Orb::draw() {
+    if (live && image) {
+        al_draw_bitmap(image, x, y, 0);
+    }
+}
+
+
+
+
+void Orb::deactivate() {
+    live = false;
+}
+
+
+
+
+bool Orb::isLive() const {
+    return live;
+}
