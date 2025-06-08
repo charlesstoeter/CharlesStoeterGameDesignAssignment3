@@ -156,9 +156,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CharlesStoeterGameDesignAssignment3.cpp" />
+    <ClCompile Include="Orb.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Orb.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
