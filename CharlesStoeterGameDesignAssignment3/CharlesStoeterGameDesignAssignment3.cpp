@@ -1,10 +1,13 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <iostream>
-#include <direct.h> // Required for _getcwd
-#include <cstring>  // For C-style strings
-
+#include <direct.h> // required for _getcwd
+#include <cstring>  // for C-style strings
 #include "Orb.h"
+
+#include <allegro5/allegro_primitives.h>  
+
+
 
 
 
@@ -12,6 +15,7 @@
 
 const int SCREEN_W = 800;
 const int SCREEN_H = 600;
+
 
 Orb orbs[10];  // Up to 10 on screen
 
@@ -92,20 +96,73 @@ int main() {
 
 
 
+    al_install_keyboard();
+    ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
+    ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0); // 60 FPS
+    al_register_event_source(queue, al_get_timer_event_source(timer));
+    al_register_event_source(queue, al_get_keyboard_event_source());
+    al_register_event_source(queue, al_get_display_event_source(display));
 
-    al_clear_to_color(al_map_rgb(0, 0, 0)); // Black background
-
-    al_draw_bitmap(fire, 100, 100, 0); // Draw the image at (100, 100)
-
-    al_flip_display();// Show the result
+    al_start_timer(timer);
 
 
 
+    bool done = false;
+    bool keys[ALLEGRO_KEY_MAX] = { false };
+
+    while (!done) {
+        ALLEGRO_EVENT ev;
+        al_wait_for_event(queue, &ev);
+
+        if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+            done = true;
+        }
+        else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+            keys[ev.keyboard.keycode] = true;
+            if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
+                done = true;
+
+            // Fire orb on space
+            if (ev.keyboard.keycode == ALLEGRO_KEY_SPACE) {
+                for (int i = 0; i < 10; i++) {
+                    if (!orbs[i].isLive()) {
+                        orbs[i].fire(400, 500, 90, fire); // Starting from center bottom, straight up
+                        break;
+                    }
+                }
+            }
+        }
+        else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
+            keys[ev.keyboard.keycode] = false;
+        }
+        else if (ev.type == ALLEGRO_EVENT_TIMER) {
+            // Update orbs
+            for (int i = 0; i < 10; i++) {
+                if (orbs[i].isLive()) {
+                    orbs[i].update();
+                }
+            }
+
+            // Draw everything
+            al_clear_to_color(al_map_rgb(0, 0, 0));
+            for (int i = 0; i < 10; i++) {
+                orbs[i].draw();
+            }
+            al_flip_display();
+        }
+    }
 
 
-    al_rest(3.0); // Pause for 3 seconds to view the image
+
+
 
     al_destroy_bitmap(fire);
     al_destroy_display(display);
+
+
+    al_destroy_timer(timer);
+    al_destroy_event_queue(queue);
+
+
     return 0;
 }
