@@ -9,6 +9,10 @@ Asteroid::Asteroid() {
     boundY = 32;
     live = false;
     image = nullptr;
+
+    destroyed = false;
+    destroyedImage = nullptr;
+
 }
 
 Asteroid::~Asteroid() {
@@ -17,6 +21,12 @@ Asteroid::~Asteroid() {
         image = nullptr;
 
     }
+
+
+    if (destroyedImage) {
+        al_destroy_bitmap(destroyedImage);
+        destroyedImage = nullptr;
+    }
 }
 
 void Asteroid::start(int screenW) {
@@ -24,6 +34,7 @@ void Asteroid::start(int screenW) {
     y = 0;
     speed = 2 + rand() % 3;
     live = true;
+    destroyed = false;
 }
 
 void Asteroid::update() {
@@ -34,10 +45,15 @@ void Asteroid::update() {
 }
 
 void Asteroid::draw() {
-    if (live && image) {
-        al_draw_bitmap(image, x, y, 0);
+    if (live) {
+        if (destroyed && destroyedImage)
+            al_draw_bitmap(destroyedImage, x, y, 0);
+        else if (image)
+            al_draw_bitmap(image, x, y, 0);
     }
 }
+
+
 
 void Asteroid::collideWithGround() {
     // Placeholder for logic if you want game over on ground hit
@@ -81,6 +97,24 @@ void Asteroid::loadImage(const char* filename) {
 
 ALLEGRO_BITMAP* Asteroid::getBitmap() const {
     return image;
+}
+
+
+
+void Asteroid::setDestroyed(bool d) {
+    destroyed = d;
+}
+
+bool Asteroid::isDestroyed() const {
+    return destroyed;
+}
+
+void Asteroid::loadDestroyedImage(const char* filename) {
+    destroyedImage = al_load_bitmap(filename);
+    al_convert_mask_to_alpha(destroyedImage, al_map_rgb(255, 255, 255));
+    if (!destroyedImage) {
+        std::cerr << "Failed to load destroyed asteroid image: " << filename << "\n";
+    }
 }
 
 

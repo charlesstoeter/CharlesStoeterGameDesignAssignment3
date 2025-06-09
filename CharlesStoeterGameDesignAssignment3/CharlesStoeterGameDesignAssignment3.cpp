@@ -116,6 +116,7 @@ int main() {
 
     for (int i = 0; i < 5; ++i) {
         asteroids[i].loadImage("astroid.png");
+        asteroids[i].loadDestroyedImage("destroyed.png");
         al_convert_mask_to_alpha(asteroids[i].getBitmap(), al_map_rgb(255, 255, 255));
 
     }
@@ -212,7 +213,7 @@ int main() {
                                 asteroids[j].getBoundX(), asteroids[j].getBoundY()
                             )) {
                                 orbs[i].deactivate();
-                                asteroids[j].setLive(false); // You'll add this next
+                                asteroids[j].setDestroyed(true);
                                 break;
                             }
                         }

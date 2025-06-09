@@ -24,6 +24,10 @@ public:
     int getBoundX() const;
     int getBoundY() const;
 
+    void setDestroyed(bool d);
+    bool isDestroyed() const;
+    void loadDestroyedImage(const char* filename);
+
 
     ALLEGRO_BITMAP* getBitmap() const;
 
@@ -33,6 +37,9 @@ private:
     int boundX, boundY;
     bool live;
     ALLEGRO_BITMAP* image;
+
+    bool destroyed;
+    ALLEGRO_BITMAP* destroyedImage;
 };
 
 #endif
