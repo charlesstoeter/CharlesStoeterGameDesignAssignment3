@@ -330,6 +330,9 @@ int main() {
                 asteroids[i].draw();
             }
 
+
+
+            // If gameover
             if (gameOver) {
                 al_draw_text(gameFont, al_map_rgb(255, 0, 0), SCREEN_W / 2, SCREEN_H / 2 - 50,
                     ALLEGRO_ALIGN_CENTER, "GAME OVER");
@@ -337,6 +340,9 @@ int main() {
 
                 al_draw_textf(gameFont, al_map_rgb(255, 255, 255), SCREEN_W / 2, SCREEN_H / 2,
                     ALLEGRO_ALIGN_CENTER, "Final Score: %d", score);
+
+                al_draw_text(gameFont, al_map_rgb(255, 255, 0), SCREEN_W / 2, SCREEN_H / 2 + 50,
+                    ALLEGRO_ALIGN_CENTER, "Press ESC to exit");
 
             }
            
