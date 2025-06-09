@@ -38,7 +38,7 @@ void Orb::update() {
     if (!live) return;
 
     y -= speed * sin(radianAngle);
-    x += speed * cos(radianAngle);
+    x -= speed * cos(radianAngle);
 
     // Kill if off-screen
     if (x < 0 || x > 900 || y < 0 || y > 800) {
@@ -51,7 +51,10 @@ void Orb::update() {
 
 void Orb::draw() {
     if (live && image) {
-        al_draw_bitmap(image, x, y, 0);
+        float cx = al_get_bitmap_width(image) / 2.0f;
+        float cy = al_get_bitmap_height(image); // assumes origin is bottom-center
+
+        al_draw_rotated_bitmap(image, cx, cy, x, y, radianAngle - PI / 2, 0);
     }
 }
 

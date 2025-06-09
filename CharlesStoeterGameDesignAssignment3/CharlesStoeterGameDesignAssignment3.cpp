@@ -5,11 +5,9 @@
 #include <cstring>  // for C-style strings
 #include "Orb.h"
 #include "Cannon.h"
-
-
 #include <allegro5/allegro_primitives.h>  
 
-
+#define PI 3.14159265
 
 
 
@@ -140,7 +138,10 @@ int main() {
             if (ev.keyboard.keycode == ALLEGRO_KEY_SPACE) {
                 for (int i = 0; i < 10; i++) {
                     if (!orbs[i].isLive()) {
-                        orbs[i].fire(cannon.getX(), cannon.getY(), cannon.getAngle(), fire);
+                        float angleRad = cannon.getAngle() * PI / 180.0f;
+                        float fireX = cannon.getX() + 50 * cos(angleRad);
+                        float fireY = cannon.getY() - 50 * sin(angleRad);
+                        orbs[i].fire(fireX, fireY, cannon.getAngle(), fire);
                         break;
                     }
                 }
