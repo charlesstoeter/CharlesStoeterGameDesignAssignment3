@@ -154,6 +154,8 @@ int main() {
     al_start_timer(timer);
 
     bool gameOver = false;
+    int score = 0;
+
 
 
 
@@ -216,52 +218,59 @@ int main() {
 
 
         else if (ev.type == ALLEGRO_EVENT_TIMER) {
-            // Update orbs
-            for (int i = 0; i < 10; i++) {
-                if (orbs[i].isLive()) {
-                    orbs[i].update();
+
+            if (!gameOver) {
+                // Update orbs
+                for (int i = 0; i < 10; i++) {
+                    if (orbs[i].isLive()) {
+                        orbs[i].update();
+                    }
                 }
-            }
 
-            if (platform.isGameOver()) {
-                gameOver = true;
-            }
+                if (platform.isGameOver()) {
+                    gameOver = true;
+                }
 
-
-            // Check orb-asteroid collisions
-            for (int i = 0; i < 10; i++) {
-                if (orbs[i].isLive()) {
-                    for (int j = 0; j < 5; j++) {
-                        if (asteroids[j].isLive()) {
-                            if (checkCollision(
-                                orbs[i].getX(), orbs[i].getY(), 16, 16, // Orb size
-                                asteroids[j].getX(), asteroids[j].getY(),
-                                asteroids[j].getBoundX(), asteroids[j].getBoundY()
-                            )) {
-                                orbs[i].deactivate();
-                                asteroids[j].setDestroyed(true);
-                                break;
+                // Check orb-asteroid collisions
+                for (int i = 0; i < 10; i++) {
+                    if (orbs[i].isLive()) {
+                        for (int j = 0; j < 5; j++) {
+                            if (asteroids[j].isLive()) {
+                                if (checkCollision(
+                                    orbs[i].getX(), orbs[i].getY(), 16, 16,
+                                    asteroids[j].getX(), asteroids[j].getY(),
+                                    asteroids[j].getBoundX(), asteroids[j].getBoundY()
+                                )) {
+                                    if (!asteroids[j].isDestroyed()) {
+                                        orbs[i].deactivate();
+                                        asteroids[j].setDestroyed(true);
+                                        score += 1; 
+                                    }
+                                    else {
+                                        orbs[i].deactivate(); // Still remove the orb
+                                    }
+                                    break;
+                                }
                             }
                         }
                     }
                 }
-            }
 
-
-
-            for (int i = 0; i < 5; ++i) {
-                if (!asteroids[i].isLive()) {
-                    if (rand() % 100 < 2) {
-                        asteroids[i].start(SCREEN_W);
-                        asteroids[i].setLive(true);
-                        asteroids[i].setDestroyed(false); 
+                // Update asteroids
+                for (int i = 0; i < 5; ++i) {
+                    if (!asteroids[i].isLive()) {
+                        if (rand() % 100 < 2) {
+                            asteroids[i].start(SCREEN_W);
+                            asteroids[i].setLive(true);
+                            asteroids[i].setDestroyed(false);
+                        }
+                    }
+                    else {
+                        asteroids[i].update(platform.getY(), platform.getHeight(), &platform);
                     }
                 }
-                else {
-                    asteroids[i].update(platform.getY(), platform.getHeight(), &platform);
-
-                }
             }
+
 
             // Draw everything
             al_clear_to_color(al_map_rgb(0, 0, 0));
@@ -277,6 +286,9 @@ int main() {
                 orbs[i].draw();
             }
 
+            al_draw_textf(gameFont, al_map_rgb(255, 255, 255), 10, 10, 0, "Score: %d", score);
+
+
             for (int i = 0; i < 5; ++i) {
                 asteroids[i].draw();
             }
@@ -284,6 +296,11 @@ int main() {
             if (gameOver) {
                 al_draw_text(gameFont, al_map_rgb(255, 0, 0), SCREEN_W / 2, SCREEN_H / 2 - 50,
                     ALLEGRO_ALIGN_CENTER, "GAME OVER");
+
+
+                al_draw_textf(gameFont, al_map_rgb(255, 255, 255), SCREEN_W / 2, SCREEN_H / 2,
+                    ALLEGRO_ALIGN_CENTER, "Final Score: %d", score);
+
             }
            
             al_flip_display();
