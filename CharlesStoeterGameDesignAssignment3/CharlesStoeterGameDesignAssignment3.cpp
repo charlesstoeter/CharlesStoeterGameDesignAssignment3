@@ -20,6 +20,12 @@ const int SCREEN_H = 800;
 Orb orbs[10];  // Up to 10 on screen
 
 
+float cannonAngle = 90.0f; // 90° is straight up
+ALLEGRO_BITMAP* cannon = nullptr;
+const int cannonX = SCREEN_W / 2;
+const int cannonY = SCREEN_H - 100;  // near bottom
+
+
 
 
 int main() {
@@ -95,6 +101,11 @@ int main() {
     al_convert_mask_to_alpha(fire, al_map_rgb(255, 255, 255));
 
 
+    float cannonAngle = 90.0f; // 90° is straight up
+    ALLEGRO_BITMAP* cannon = nullptr;
+    const int cannonX = SCREEN_W / 2;
+    const int cannonY = SCREEN_H - 100;  // near bottom
+
 
     al_install_keyboard();
     ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
@@ -142,6 +153,8 @@ int main() {
                     orbs[i].update();
                 }
             }
+
+
 
             // Draw everything
             al_clear_to_color(al_map_rgb(0, 0, 0));
