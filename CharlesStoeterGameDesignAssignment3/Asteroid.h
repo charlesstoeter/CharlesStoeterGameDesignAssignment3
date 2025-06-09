@@ -14,6 +14,8 @@ public:
     void draw();
     void collideWithGround();  // For iceberg collision if needed
 
+    void loadImage(const char* filename);
+
     void setLive(bool l);
     bool isLive() const;
 

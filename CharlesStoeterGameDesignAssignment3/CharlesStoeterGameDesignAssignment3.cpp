@@ -5,11 +5,12 @@
 #include <cstring>  // for C-style strings
 #include "Orb.h"
 #include "Cannon.h"
+#include "Asteroid.h"
 #include <allegro5/allegro_primitives.h>  
 
 #define PI 3.14159265
 
-
+Asteroid asteroids[5];
 
 
 
@@ -63,7 +64,7 @@ int main() {
 
 
 
-
+    al_init_primitives_addon();
 
 
 
@@ -107,7 +108,12 @@ int main() {
     }
 
 
-    
+    for (int i = 0; i < 5; ++i) {
+        asteroids[i].loadImage("astroid.png");
+    }
+
+    Cannon cannon(SCREEN_W / 2, SCREEN_H - 100);
+
 
     ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
     ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0); // 60 FPS
@@ -129,10 +135,19 @@ int main() {
         if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
             done = true;
         }
+
+
+
+
+
         else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
             keys[ev.keyboard.keycode] = true;
             if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
                 done = true;
+
+
+
+
 
             // Fire orb on space
             if (ev.keyboard.keycode == ALLEGRO_KEY_SPACE) {
@@ -150,13 +165,24 @@ int main() {
             if (ev.keyboard.keycode == ALLEGRO_KEY_LEFT)
                 cannon.rotateLeft();
 
+
+
+
+
             if (ev.keyboard.keycode == ALLEGRO_KEY_RIGHT)
                 cannon.rotateRight();
+
+
+
 
         }
         else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
             keys[ev.keyboard.keycode] = false;
         }
+
+
+
+
         else if (ev.type == ALLEGRO_EVENT_TIMER) {
             // Update orbs
             for (int i = 0; i < 10; i++) {
@@ -165,7 +191,15 @@ int main() {
                 }
             }
 
-            
+            for (int i = 0; i < 5; ++i) {
+                if (!asteroids[i].isLive()) {
+                    if (rand() % 100 < 2) // Adjust frequency
+                        asteroids[i].start(SCREEN_W);
+                }
+                else {
+                    asteroids[i].update();
+                }
+            }
 
             // Draw everything
             al_clear_to_color(al_map_rgb(0, 0, 0));
@@ -180,11 +214,11 @@ int main() {
                 orbs[i].draw();
             }
 
-
-
-            for (int i = 0; i < 10; i++) {
-                orbs[i].draw();
+            for (int i = 0; i < 5; ++i) {
+                asteroids[i].draw();
             }
+
+           
             al_flip_display();
         }
     }
@@ -195,6 +229,7 @@ int main() {
 
     al_destroy_bitmap(fire);
     al_destroy_display(display);
+
 
 
     al_destroy_timer(timer);
