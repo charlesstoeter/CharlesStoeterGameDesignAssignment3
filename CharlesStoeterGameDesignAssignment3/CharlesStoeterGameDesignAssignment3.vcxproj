@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Cannon.cpp" />
     <ClCompile Include="CharlesStoeterGameDesignAssignment3.cpp" />
     <ClCompile Include="Orb.cpp" />
   </ItemGroup>
