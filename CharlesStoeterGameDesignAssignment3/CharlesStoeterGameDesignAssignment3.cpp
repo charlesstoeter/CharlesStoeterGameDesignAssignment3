@@ -13,8 +13,8 @@
 
 
 
-const int SCREEN_W = 800;
-const int SCREEN_H = 600;
+const int SCREEN_W = 900;
+const int SCREEN_H = 800;
 
 
 Orb orbs[10];  // Up to 10 on screen
@@ -78,8 +78,8 @@ int main() {
     }
 
 
-    ALLEGRO_BITMAP* test = al_load_bitmap("earth.png"); //debuging
-    if (!test) {
+    ALLEGRO_BITMAP* background = al_load_bitmap("earth.png");
+    if (!background) {
         std::cerr << "Failed to load earth.png\n";
         return -1;
     }
@@ -145,6 +145,9 @@ int main() {
 
             // Draw everything
             al_clear_to_color(al_map_rgb(0, 0, 0));
+
+            al_draw_bitmap(background, 0, 0, 0);
+
             for (int i = 0; i < 10; i++) {
                 orbs[i].draw();
             }
@@ -154,7 +157,7 @@ int main() {
 
 
 
-
+    al_destroy_bitmap(background);
 
     al_destroy_bitmap(fire);
     al_destroy_display(display);
