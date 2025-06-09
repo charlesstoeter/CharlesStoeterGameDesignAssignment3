@@ -8,6 +8,8 @@
 #include "Asteroid.h"
 #include "Platform.h"
 #include <allegro5/allegro_primitives.h>  
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>  
 
 #define PI 3.14159265
 
@@ -67,6 +69,15 @@ int main() {
 		return -1;
 	}
 
+    if (!al_init_font_addon()) {
+        std::cerr << "Failed to initialize font addon.\n";
+        return -1;
+    }
+
+    if (!al_init_ttf_addon()) {
+        std::cerr << "Failed to initialize TTF addon.\n";
+        return -1;
+    }
 
 
 
@@ -76,6 +87,12 @@ int main() {
 
 
 
+
+    ALLEGRO_FONT* gameFont = al_load_ttf_font("ARIAL.TTF", 36, 0); // Adjust size as needed
+    if (!gameFont) {
+        std::cerr << "Failed to load font.\n";
+        return -1;
+    }
 
 
 
@@ -135,6 +152,8 @@ int main() {
     al_register_event_source(queue, al_get_display_event_source(display));
 
     al_start_timer(timer);
+
+    bool gameOver = false;
 
 
 
@@ -205,8 +224,7 @@ int main() {
             }
 
             if (platform.isGameOver()) {
-                std::cout << "Game Over!" << std::endl;
-                done = true;
+                gameOver = true;
             }
 
 
@@ -263,6 +281,10 @@ int main() {
                 asteroids[i].draw();
             }
 
+            if (gameOver) {
+                al_draw_text(gameFont, al_map_rgb(255, 0, 0), SCREEN_W / 2, SCREEN_H / 2 - 50,
+                    ALLEGRO_ALIGN_CENTER, "GAME OVER");
+            }
            
             al_flip_display();
         }
@@ -279,6 +301,7 @@ int main() {
     al_destroy_timer(timer);
     al_destroy_event_queue(queue);
 
+    al_destroy_font(gameFont);
 
     return 0;
 }
