@@ -4,6 +4,8 @@
 #include <direct.h> // required for _getcwd
 #include <cstring>  // for C-style strings
 #include "Orb.h"
+#include "Cannon.h"
+
 
 #include <allegro5/allegro_primitives.h>  
 
@@ -20,10 +22,6 @@ const int SCREEN_H = 800;
 Orb orbs[10];  // Up to 10 on screen
 
 
-float cannonAngle = 90.0f; // 90° is straight up
-ALLEGRO_BITMAP* cannon = nullptr;
-const int cannonX = SCREEN_W / 2;
-const int cannonY = SCREEN_H - 100;  // near bottom
 
 
 
@@ -101,13 +99,18 @@ int main() {
     al_convert_mask_to_alpha(fire, al_map_rgb(255, 255, 255));
 
 
-    float cannonAngle = 90.0f; // 90° is straight up
-    ALLEGRO_BITMAP* cannon = nullptr;
-    const int cannonX = SCREEN_W / 2;
-    const int cannonY = SCREEN_H - 100;  // near bottom
 
 
-    al_install_keyboard();
+
+    Cannon cannon(SCREEN_W / 2, SCREEN_H - 100);
+    if (!cannon.loadImage("cannon.png")) {
+        std::cerr << "Could not load cannon image.\n";
+        return -1;
+    }
+
+
+    
+
     ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
     ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0); // 60 FPS
     al_register_event_source(queue, al_get_timer_event_source(timer));
@@ -137,11 +140,18 @@ int main() {
             if (ev.keyboard.keycode == ALLEGRO_KEY_SPACE) {
                 for (int i = 0; i < 10; i++) {
                     if (!orbs[i].isLive()) {
-                        orbs[i].fire(400, 500, 90, fire); // Starting from center bottom, straight up
+                        orbs[i].fire(cannon.getX(), cannon.getY(), cannon.getAngle(), fire);
                         break;
                     }
                 }
             }
+
+            if (ev.keyboard.keycode == ALLEGRO_KEY_LEFT)
+                cannon.rotateLeft();
+
+            if (ev.keyboard.keycode == ALLEGRO_KEY_RIGHT)
+                cannon.rotateRight();
+
         }
         else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
             keys[ev.keyboard.keycode] = false;
@@ -154,12 +164,22 @@ int main() {
                 }
             }
 
-
+            
 
             // Draw everything
             al_clear_to_color(al_map_rgb(0, 0, 0));
 
+            
+
+
+
             al_draw_bitmap(background, 0, 0, 0);
+            cannon.draw();
+            for (int i = 0; i < 10; i++) {
+                orbs[i].draw();
+            }
+
+
 
             for (int i = 0; i < 10; i++) {
                 orbs[i].draw();

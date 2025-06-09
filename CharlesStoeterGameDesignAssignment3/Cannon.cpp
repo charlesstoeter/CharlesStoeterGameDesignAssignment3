@@ -20,11 +20,13 @@ Cannon::~Cannon() {
     }
 }
 
-void Cannon::loadImage(const char* filename) {
+bool Cannon::loadImage(const char* filename) {
     image = al_load_bitmap(filename);
     if (!image) {
         fprintf(stderr, "Failed to load %s\n", filename);
+        return false;
     }
+    return true;
 }
 
 void Cannon::rotateLeft() {
@@ -49,6 +51,7 @@ void Cannon::draw() {
 float Cannon::getAngle() const {
     return angle;
 }
+
 
 int Cannon::getX() const {
     return x;

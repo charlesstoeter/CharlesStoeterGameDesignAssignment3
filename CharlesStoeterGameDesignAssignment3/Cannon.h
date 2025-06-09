@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 #ifndef CANNON_H
 #define CANNON_H
 
@@ -9,7 +10,7 @@ public:
     Cannon(int x, int y);
     ~Cannon();
 
-    void loadImage(const char* filename);
+    bool loadImage(const char* filename);  // CHANGED from void to bool
     void rotateLeft();
     void rotateRight();
     void draw();
