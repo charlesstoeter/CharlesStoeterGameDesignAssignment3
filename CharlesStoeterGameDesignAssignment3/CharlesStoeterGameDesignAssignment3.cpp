@@ -85,6 +85,7 @@ int main() {
     al_init_primitives_addon();
 
 
+    
 
 
 
@@ -156,7 +157,8 @@ int main() {
     bool gameOver = false;
     int score = 0;
 
-
+    const double FIRE_COOLDOWN = 0.3; // seconds between shots
+    double fireCooldown = 0;
 
 
     bool done = false;
@@ -227,11 +229,36 @@ int main() {
                     }
                 }
 
+                if (keys[ALLEGRO_KEY_LEFT]) {
+                    cannon.rotateLeft();
+                }
+                if (keys[ALLEGRO_KEY_RIGHT]) {
+                    cannon.rotateRight();
+                }
+
+
+
                 if (platform.isGameOver()) {
                     gameOver = true;
                 }
 
-                // Check orb-asteroid collisions
+                fireCooldown -= 1.0 / 60.0; // update cooldown
+
+                // Firing logic
+                if (keys[ALLEGRO_KEY_SPACE] && fireCooldown <= 0) {
+                    for (int i = 0; i < 10; i++) {
+                        if (!orbs[i].isLive()) {
+                            float angleRad = cannon.getAngle() * PI / 180.0f;
+                            float fireX = cannon.getX() + 50 * cos(angleRad);
+                            float fireY = cannon.getY() - 50 * sin(angleRad);
+                            orbs[i].fire(fireX, fireY, cannon.getAngle(), fire);
+                            fireCooldown = FIRE_COOLDOWN; // reset cooldown
+                            break;
+                        }
+                    }
+                }
+
+                // Collision logic (always runs while game is active)
                 for (int i = 0; i < 10; i++) {
                     if (orbs[i].isLive()) {
                         for (int j = 0; j < 5; j++) {
@@ -242,19 +269,22 @@ int main() {
                                     asteroids[j].getBoundX(), asteroids[j].getBoundY()
                                 )) {
                                     if (!asteroids[j].isDestroyed()) {
-                                        orbs[i].deactivate();
+                                        score += 1;
                                         asteroids[j].setDestroyed(true);
-                                        score += 1; 
                                     }
-                                    else {
-                                        orbs[i].deactivate(); // Still remove the orb
-                                    }
+                                    orbs[i].deactivate(); // Always deactivate orb
                                     break;
                                 }
                             }
                         }
                     }
                 }
+
+            
+
+
+                // Check orb-asteroid collisions
+                
 
                 // Update asteroids
                 for (int i = 0; i < 5; ++i) {
@@ -322,6 +352,7 @@ int main() {
 
     return 0;
 }
+
 
 
 
