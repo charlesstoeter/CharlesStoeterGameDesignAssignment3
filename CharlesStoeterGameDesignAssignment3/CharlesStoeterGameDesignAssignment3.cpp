@@ -22,7 +22,13 @@ Orb orbs[10];  // Up to 10 on screen
 
 
 
-
+bool checkCollision(int x1, int y1, int w1, int h1,
+    int x2, int y2, int w2, int h2) {
+    return !(x1 + w1 < x2 ||     // Right of A is left of B
+        x1 > x2 + w2 ||     // Left of A is right of B
+        y1 + h1 < y2 ||     // Bottom of A is above B
+        y1 > y2 + h2);      // Top of A is below B
+}
 
 
 int main() {
@@ -110,9 +116,11 @@ int main() {
 
     for (int i = 0; i < 5; ++i) {
         asteroids[i].loadImage("astroid.png");
+        al_convert_mask_to_alpha(asteroids[i].getBitmap(), al_map_rgb(255, 255, 255));
+
     }
 
-    Cannon cannon(SCREEN_W / 2, SCREEN_H - 100);
+    
 
 
     ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
@@ -191,6 +199,29 @@ int main() {
                 }
             }
 
+
+
+            // Check orb-asteroid collisions
+            for (int i = 0; i < 10; i++) {
+                if (orbs[i].isLive()) {
+                    for (int j = 0; j < 5; j++) {
+                        if (asteroids[j].isLive()) {
+                            if (checkCollision(
+                                orbs[i].getX(), orbs[i].getY(), 16, 16, // Orb size
+                                asteroids[j].getX(), asteroids[j].getY(),
+                                asteroids[j].getBoundX(), asteroids[j].getBoundY()
+                            )) {
+                                orbs[i].deactivate();
+                                asteroids[j].setLive(false); // You'll add this next
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
             for (int i = 0; i < 5; ++i) {
                 if (!asteroids[i].isLive()) {
                     if (rand() % 100 < 2) // Adjust frequency
@@ -238,3 +269,9 @@ int main() {
 
     return 0;
 }
+
+
+
+
+
+

@@ -24,6 +24,9 @@ public:
     int getBoundX() const;
     int getBoundY() const;
 
+
+    ALLEGRO_BITMAP* getBitmap() const;
+
 private:
     int x, y;
     int speed;

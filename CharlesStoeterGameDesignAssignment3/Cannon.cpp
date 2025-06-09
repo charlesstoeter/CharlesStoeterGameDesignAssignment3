@@ -30,12 +30,12 @@ bool Cannon::loadImage(const char* filename) {
 }
 
 void Cannon::rotateLeft() {
-    angle -= 2.5f;
+    angle -= 15.0f;
     if (angle < 30.0f) angle = 30.0f;
 }
 
 void Cannon::rotateRight() {
-    angle += 2.5f;
+    angle += 15.0f;
     if (angle > 150.0f) angle = 150.0f;
 }
 

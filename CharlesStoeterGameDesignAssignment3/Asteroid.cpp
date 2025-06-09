@@ -44,12 +44,30 @@ void Asteroid::collideWithGround() {
     live = false;
 }
 
-void Asteroid::setLive(bool l) { live = l; }
-bool Asteroid::isLive() const { return live; }
-int Asteroid::getX() const { return x; }
-int Asteroid::getY() const { return y; }
-int Asteroid::getBoundX() const { return boundX; }
-int Asteroid::getBoundY() const { return boundY; }
+void Asteroid::setLive(bool l) { 
+    live = l; 
+}
+
+bool Asteroid::isLive() const { 
+    return live; 
+}
+
+int Asteroid::getX() const { 
+    return x; 
+}
+
+int Asteroid::getY() const {
+    return y; 
+}
+
+int Asteroid::getBoundX() const {
+    return boundX; 
+}
+
+int Asteroid::getBoundY() const {
+    return boundY; 
+}
+
 
 
 void Asteroid::loadImage(const char* filename) {
@@ -58,3 +76,12 @@ void Asteroid::loadImage(const char* filename) {
         std::cerr << "Failed to load asteroid image: " << filename << "\n";
     }
 }
+
+
+
+ALLEGRO_BITMAP* Asteroid::getBitmap() const {
+    return image;
+}
+
+
+
