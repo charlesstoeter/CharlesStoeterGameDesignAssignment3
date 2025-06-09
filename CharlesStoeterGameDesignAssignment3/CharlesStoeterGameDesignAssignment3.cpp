@@ -21,10 +21,10 @@ const int SCREEN_W = 900;
 const int SCREEN_H = 800;
 
 
-Orb orbs[10];  // Up to 10 on screen
+Orb orbs[10];  // Array of orbs (projectiles), max 10
 
 
-
+// Check for collision between two rectangles
 bool checkCollision(int x1, int y1, int w1, int h1,
     int x2, int y2, int w2, int h2) {
     return !(x1 + w1 < x2 ||     // Right of A is left of B
@@ -37,7 +37,7 @@ bool checkCollision(int x1, int y1, int w1, int h1,
 int main() {
 
 
-
+    // Show current working directory for debugging asset paths
     char cwd[512];
     _getcwd(cwd, 512);
     std::cout << "Current working directory: " << cwd << std::endl;
@@ -125,14 +125,14 @@ int main() {
 
 
 
-
+    // Create and initialize the cannon
     Cannon cannon(SCREEN_W / 2, SCREEN_H - 100);
     if (!cannon.loadImage("cannon.png")) {
         std::cerr << "Could not load cannon image.\n";
         return -1;
     }
 
-
+    // Load asteroid images
     for (int i = 0; i < 5; ++i) {
         asteroids[i].loadImage("astroid.png");
         asteroids[i].loadDestroyedImage("destroyed.png");
@@ -140,6 +140,7 @@ int main() {
 
     }
 
+    // Create platform at the bottom of the screen
     Platform platform(0, SCREEN_H - 50, SCREEN_W, 50); // Full-width platform at bottom
 
 
@@ -154,6 +155,9 @@ int main() {
 
     al_start_timer(timer);
 
+
+
+    // Game state variables
     bool gameOver = false;
     int score = 0;
 
@@ -164,6 +168,9 @@ int main() {
     bool done = false;
     bool keys[ALLEGRO_KEY_MAX] = { false };
 
+
+
+	// Main game loop
     while (!done) {
         ALLEGRO_EVENT ev;
         al_wait_for_event(queue, &ev);
@@ -175,7 +182,7 @@ int main() {
 
 
 
-
+        // Handle key press
         else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
             keys[ev.keyboard.keycode] = true;
             if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
@@ -212,13 +219,15 @@ int main() {
 
 
         }
+
+        // Handle key release
         else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
             keys[ev.keyboard.keycode] = false;
         }
 
 
 
-
+		//Handle timer events (game logic updates)
         else if (ev.type == ALLEGRO_EVENT_TIMER) {
 
             if (!gameOver) {
@@ -229,6 +238,8 @@ int main() {
                     }
                 }
 
+
+                // Rotate cannon if key held
                 if (keys[ALLEGRO_KEY_LEFT]) {
                     cannon.rotateLeft();
                 }
@@ -242,7 +253,8 @@ int main() {
                     gameOver = true;
                 }
 
-                fireCooldown -= 1.0 / 60.0; // update cooldown
+                // Cooldown for firing
+                fireCooldown -= 1.0 / 60.0; 
 
                 // Firing logic
                 if (keys[ALLEGRO_KEY_SPACE] && fireCooldown <= 0) {
@@ -262,23 +274,22 @@ int main() {
                 for (int i = 0; i < 10; i++) {
                     if (orbs[i].isLive()) {
                         for (int j = 0; j < 5; j++) {
-                            if (asteroids[j].isLive()) {
+                            if (asteroids[j].isLive() && !asteroids[j].isDestroyed()) {
                                 if (checkCollision(
                                     orbs[i].getX(), orbs[i].getY(), 16, 16,
                                     asteroids[j].getX(), asteroids[j].getY(),
                                     asteroids[j].getBoundX(), asteroids[j].getBoundY()
                                 )) {
-                                    if (!asteroids[j].isDestroyed()) {
-                                        score += 1;
-                                        asteroids[j].setDestroyed(true);
-                                    }
-                                    orbs[i].deactivate(); // Always deactivate orb
-                                    break;
+                                    score += 1;
+                                    asteroids[j].setDestroyed(true);
+                                    orbs[i].deactivate();
+                                    break;  // Stop checking more asteroids for this orb
                                 }
                             }
                         }
                     }
                 }
+
 
             
 
@@ -304,10 +315,6 @@ int main() {
 
             // Draw everything
             al_clear_to_color(al_map_rgb(0, 0, 0));
-
-            
-
-
 
             al_draw_bitmap(background, 0, 0, 0);
             platform.draw();
