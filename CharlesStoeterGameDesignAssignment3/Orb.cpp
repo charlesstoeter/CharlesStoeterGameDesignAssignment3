@@ -71,3 +71,12 @@ void Orb::deactivate() {
 bool Orb::isLive() const {
     return live;
 }
+
+
+int Orb::getX() const {
+    return x;
+}
+
+int Orb::getY() const {
+    return y;
+}

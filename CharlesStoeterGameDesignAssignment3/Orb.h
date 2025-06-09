@@ -12,6 +12,9 @@ public:
     void draw();
     void deactivate();
     bool isLive() const;
+    int getX() const;
+    int getY() const;
+
 
 private:
     int x, y;
