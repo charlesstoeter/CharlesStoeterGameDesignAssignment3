@@ -44,7 +44,8 @@ void Cannon::draw() {
         float cx = al_get_bitmap_width(image) / 2.0f;
         float cy = al_get_bitmap_height(image);
 
-        al_draw_rotated_bitmap(image, cx, cy, x, y, angle * PI / 180.0f, 0);
+        al_draw_rotated_bitmap(image, cx, cy, x, y, (angle - 90) * PI / 180.0f, 0);
+
     }
 }
 

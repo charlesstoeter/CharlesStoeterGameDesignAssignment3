@@ -20,7 +20,7 @@ void Orb::fire(int startX, int startY, float angle, ALLEGRO_BITMAP* img) {
 
 
 
-        radianAngle = ((angle + 64.0f) / 0.711f) * ((2 * PI) / 360.0f); // arc
+        radianAngle = angle * PI / 180.0f;
 
 
 
@@ -35,13 +35,14 @@ void Orb::fire(int startX, int startY, float angle, ALLEGRO_BITMAP* img) {
 
 
 void Orb::update() {
-    if (live) {
-        x += speed * cos(radianAngle);
-        y -= speed * sin(radianAngle);
+    if (!live) return;
 
-        // Deactivate if off-screen
-        if (x < 0 || x > 800 || y < 0 || y > 600)
-            live = false;
+    y -= speed * sin(radianAngle);
+    x += speed * cos(radianAngle);
+
+    // Kill if off-screen
+    if (x < 0 || x > 900 || y < 0 || y > 800) {
+        live = false;
     }
 }
 
