@@ -6,6 +6,7 @@
 #include "Orb.h"
 #include "Cannon.h"
 #include "Asteroid.h"
+#include "Platform.h"
 #include <allegro5/allegro_primitives.h>  
 
 #define PI 3.14159265

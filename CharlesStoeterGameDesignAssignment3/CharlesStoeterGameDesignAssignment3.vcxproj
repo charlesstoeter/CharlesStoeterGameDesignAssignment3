@@ -159,6 +159,7 @@
     <ClCompile Include="Cannon.cpp" />
     <ClCompile Include="CharlesStoeterGameDesignAssignment3.cpp" />
     <ClCompile Include="Orb.cpp" />
+    <ClCompile Include="Platform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
