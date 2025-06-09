@@ -167,6 +167,7 @@
     <ClInclude Include="Asteroid.h" />
     <ClInclude Include="Cannon.h" />
     <ClInclude Include="Orb.h" />
+    <ClInclude Include="Platform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
