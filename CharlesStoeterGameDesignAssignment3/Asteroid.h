@@ -4,13 +4,15 @@
 
 #include <allegro5/allegro.h>
 
+class Platform;
+
+
 class Asteroid {
 public:
     Asteroid();
     ~Asteroid();
 
     void start(int screenW);
-    void update();
     void draw();
     void collideWithGround();  // For iceberg collision if needed
 
@@ -27,6 +29,9 @@ public:
     void setDestroyed(bool d);
     bool isDestroyed() const;
     void loadDestroyedImage(const char* filename);
+
+    void update(int platformY, int platformHeight, Platform* platform);
+
 
 
     ALLEGRO_BITMAP* getBitmap() const;

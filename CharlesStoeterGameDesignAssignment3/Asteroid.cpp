@@ -3,6 +3,9 @@
 #include <cstdlib>  // for rand()
 #include <iostream>
 
+#include "Platform.h"  
+
+
 Asteroid::Asteroid() {
     x = y = speed = 0;
     boundX = 32;
@@ -37,19 +40,16 @@ void Asteroid::start(int screenW) {
     destroyed = false;
 }
 
-void Asteroid::update() {
-    if (live) {
-        y += speed;
-        if (y > 800) live = false;  // Off screen
-    }
-}
+
 
 void Asteroid::draw() {
-    if (live) {
-        if (destroyed && destroyedImage)
-            al_draw_bitmap(destroyedImage, x, y, 0);
-        else if (image)
-            al_draw_bitmap(image, x, y, 0);
+    if (!live) return;
+
+    if (!destroyed && image) {
+        al_draw_bitmap(image, x, y, 0);
+    }
+    else if (destroyed && destroyedImage) {
+        al_draw_bitmap(destroyedImage, x, y, 0);
     }
 }
 
@@ -116,6 +116,22 @@ void Asteroid::loadDestroyedImage(const char* filename) {
         std::cerr << "Failed to load destroyed asteroid image: " << filename << "\n";
     }
 }
+
+
+void Asteroid::update(int platformY, int platformHeight, Platform* platform) {
+    if (!live) return;
+
+    y += speed;
+
+    // Check if it hits the platform
+    if (y + boundY > platformY) {
+        if (!destroyed && platform) {
+            platform->damage();  // Call platform's damage method
+        }
+        live = false;
+    }
+}
+
 
 
 

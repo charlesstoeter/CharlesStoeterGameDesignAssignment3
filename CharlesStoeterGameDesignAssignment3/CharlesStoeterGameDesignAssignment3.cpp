@@ -122,6 +122,9 @@ int main() {
 
     }
 
+    Platform platform(0, SCREEN_H - 50, SCREEN_W, 50); // Full-width platform at bottom
+
+
     
 
 
@@ -201,6 +204,10 @@ int main() {
                 }
             }
 
+            if (platform.isGameOver()) {
+                std::cout << "Game Over!" << std::endl;
+                done = true;
+            }
 
 
             // Check orb-asteroid collisions
@@ -226,11 +233,15 @@ int main() {
 
             for (int i = 0; i < 5; ++i) {
                 if (!asteroids[i].isLive()) {
-                    if (rand() % 100 < 2) // Adjust frequency
+                    if (rand() % 100 < 2) {
                         asteroids[i].start(SCREEN_W);
+                        asteroids[i].setLive(true);
+                        asteroids[i].setDestroyed(false); 
+                    }
                 }
                 else {
-                    asteroids[i].update();
+                    asteroids[i].update(platform.getY(), platform.getHeight(), &platform);
+
                 }
             }
 
@@ -242,6 +253,7 @@ int main() {
 
 
             al_draw_bitmap(background, 0, 0, 0);
+            platform.draw();
             cannon.draw();
             for (int i = 0; i < 10; i++) {
                 orbs[i].draw();
@@ -262,7 +274,6 @@ int main() {
 
     al_destroy_bitmap(fire);
     al_destroy_display(display);
-
 
 
     al_destroy_timer(timer);

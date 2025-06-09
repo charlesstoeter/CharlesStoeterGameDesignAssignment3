@@ -15,10 +15,6 @@ void Platform::draw() const {
     al_draw_filled_rectangle(x, y, x + width, y + height, color);
 }
 
-void Platform::damage() {
-    if (damageLevel < 5)
-        damageLevel++;
-}
 
 
 bool Platform::isGameOver() const {
@@ -46,3 +42,7 @@ int Platform::getHeight() const {
 }
 
 
+void Platform::damage() {
+    if (damageLevel < 5)
+        damageLevel++;
+}

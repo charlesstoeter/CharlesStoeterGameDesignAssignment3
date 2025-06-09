@@ -4,6 +4,8 @@
 
 #include <allegro5/allegro.h>
 
+
+
 class Platform {
 public:
     Platform(int x, int y, int width, int height);
@@ -17,9 +19,13 @@ public:
     int getWidth() const;
     int getHeight() const;
 
+
 private:
     int x, y, width, height;
     int damageLevel;// 0 = full health, 5 = game over
+    
+
+
 };
 
 #endif
